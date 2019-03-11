@@ -25,19 +25,29 @@ public class CameraMover : MonoBehaviour {
 
         camera = GetComponent<Rigidbody>();
         lineMat = creator.lineMat;
+        playerSpeed = 10;
 
-       
+
 
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (Input.GetKey("w"))
+        if(Input.GetKey("w") && Input.GetKey(KeyCode.LeftShift))
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * playerSpeed * 10); //move forward
+        }
+        else if (Input.GetKey("w"))
         {
             transform.Translate(Vector3.forward * Time.deltaTime * playerSpeed); //move forward
         }
-        if (Input.GetKey("s"))
+        if(Input.GetKey("s") && Input.GetKey(KeyCode.LeftShift))
+        {
+            transform.Translate(Vector3.back * Time.deltaTime * playerSpeed * 10); //move backwards
+
+        }
+        else if (Input.GetKey("s"))
         {
             transform.Translate(Vector3.back * Time.deltaTime * playerSpeed); //move backwards
         }
@@ -50,7 +60,7 @@ public class CameraMover : MonoBehaviour {
             transform.Translate(Vector3.right * Time.deltaTime * playerSpeed); //move right
         }
         
-        if (Input.GetKey("c"))
+        if (Input.GetMouseButton(1))
         {
             Look();
         }
@@ -70,13 +80,13 @@ public class CameraMover : MonoBehaviour {
         inputRotation = mousePlacement - screenCentre;
     }
 
-    public float lookSpeed = 3;
+    public float lookSpeed = 10;
     private Vector2 rotation = Vector2.zero;
     public void Look() // Look rotation (UP down is Camera) (Left right is Transform rotation)
     {
         rotation.y += Input.GetAxis("Mouse X");
         rotation.x += -Input.GetAxis("Mouse Y");
-        rotation.x = Mathf.Clamp(rotation.x, -15f, 15f);
+        //rotation.x = Mathf.Clamp(rotation.x, -15f, 15f);
         //transform.eulerAngles = new Vector2(0, rotation.y) * lookSpeed;
         //transform.localRotation = Quaternion.Euler(0, rotation.y * lookSpeed, 0);
         transform.localRotation = Quaternion.Euler(rotation.x * lookSpeed, rotation.y * lookSpeed, 0);

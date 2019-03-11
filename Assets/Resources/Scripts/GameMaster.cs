@@ -132,6 +132,20 @@ public class GameMaster : MonoBehaviour {
     {
         PrevState = GetBoard();
 
+        if(!Bnt == null)
+        {
+            string currentEdgeID = edgeController.MakeEdgeId(Bnt.name.Replace("Button-", ""));
+            Edge currentEdge = edgeController.GetEdgeInLayer(currentEdgeID, GameHeader.CurrentTurn);
+            if (currentEdge == null)//if not exists, add new 
+            {
+                //Debug.Log("edge " + currentEdgeID + " is fuckin null!!!");
+                currentEdge = edgeController.AddNewEdge(currentEdgeID, PrevState, GameHeader.CurrentTurn);
+            }
+            edgeController.CheckEdges.Add(currentEdge);//add to checked list
+        }
+        
+
+
         if (GameHeader.Dirty)//are we OnEdit1
         {
             SetBoard();
@@ -170,15 +184,7 @@ public class GameMaster : MonoBehaviour {
         //GameHeader.SetNextPlayerToken
         /*	put in index*/
 
-        string currentEdgeID = edgeController.MakeEdgeId(Bnt.name.Replace("Button-", ""));
-        Edge currentEdge = edgeController.GetEdgeInLayer(currentEdgeID, GameHeader.CurrentTurn);
-        if (currentEdge == null)//if not exists, add new 
-        {
-            //Debug.Log("edge " + currentEdgeID + " is fuckin null!!!");
-            currentEdge = edgeController.AddNewEdge(currentEdgeID, PrevState, GameHeader.CurrentTurn);
-        }
-        edgeController.CheckEdges.Add(currentEdge);//add to checked list
-
+        
 
         Bnt.GetComponentInChildren<Text>().text = GameHeader.CurrentToken;//place the token
 

@@ -92,7 +92,7 @@ public class BrainCreator : MonoBehaviour {
                     ST.Layer = states.Layer;
                     foreach (Edge item in states.Edges)
                     {
-                        Debug.Log("Edge ID == " + item.Id);
+                        //Debug.Log("Edge ID == " + item.Id);
                         ST.Edges.Add(item);
                     }
                     go.transform.parent = theFater.transform;
