@@ -77,7 +77,7 @@ public class GameMaster : MonoBehaviour {
         TtB = new Text[GameHeader.BoradSize * GameHeader.BoradSize];
         //Debug.Log("GameHeader.BoradSize  == " + GameHeader.BoradSize);
         //Debug.Log("TtB size  == " + TtB.Length);
-
+        Tt.text = "Place " + GameHeader.CurrentToken + " on the borad";
 
 
 
@@ -197,7 +197,7 @@ public class GameMaster : MonoBehaviour {
             if (CheckWin())//if someone wins, end it, else, continue play
             {
                 GameHeader.Borad = GetBoard();
-                Tt.text = "player " + GameHeader.CurrentToken + " has won";
+               
                 DisableAllButtons();
                 stateController.AddWinStateToDB();
                 edgeController.UpdateAllCheckedEdges();
@@ -206,7 +206,8 @@ public class GameMaster : MonoBehaviour {
             }
         }
         /*  go to other player -set other player flag ==> player   */
-        GameHeader.SetNextPlayerToken();
+        OnEndTurn();
+        //GameHeader.SetNextPlayerToken();
         //Debug.Log("GameHeader.CurrentTurn1=====" + GameHeader.CurrentTurn);
 
        
@@ -226,17 +227,31 @@ public class GameMaster : MonoBehaviour {
     }
 
 
-    public void OnAutoPlay()
+    public void OnAutoPlay(Button b)
     {
-        if(AutoPlay)
+        var colors = b.colors;
+        if (AutoPlay)
         {
             AutoPlay = false;
+            colors.normalColor = Color.white;
         }
         else
         {
             AutoPlay = true;
+            colors.normalColor = Color.red;
+        }
+        b.colors = colors;
+    }
+
+    private string SetNextPlayerText()
+    {
+        if (GameHeader.BWin & GameHeader.Win != "no")
+        {
+            return "" + GameHeader.CurrentToken + " Has Won!";
+
         }
 
+        return "it's " + GameHeader.CurrentToken + " turn!";
     }
 
     private bool CheckWin()
@@ -256,6 +271,7 @@ public class GameMaster : MonoBehaviour {
             {
                 GameHeader.Win = GameHeader.CurrentToken;
                 GameHeader.BWin = true;
+                Tt.text = SetNextPlayerText();
                 return true;
             }
 
@@ -269,6 +285,7 @@ public class GameMaster : MonoBehaviour {
             GameHeader.Win = "no";
             //ToDO:add weight to edges = 1
             GameHeader.BWin = true;
+            //Tt.text = SetNextPlayerText();
             return true;
         }
         return false;
@@ -346,16 +363,7 @@ public class GameMaster : MonoBehaviour {
     return str;
     }
 
-    private string SetNextPlayerText()
-    {
-    if(GameHeader.BWin)
-    {
-        return "" + GameHeader.CurrentToken + " Has Won!";
-
-    }
-
-    return "it's " + GameHeader.CurrentToken + " turn!";
-    }
+    
 
 
     public void OnEndTurn()
@@ -389,7 +397,9 @@ public class GameMaster : MonoBehaviour {
         }
         if (a.Equals(STemp))
         {
+            Debug.Log("winset " + STemp);
             return true;
+            
         }
         else
         {
@@ -407,6 +417,7 @@ public class GameMaster : MonoBehaviour {
         GameHeader.Win = "";//no win
         GameHeader.BWin = false;//reswt win flage
         GameHeader.Borad = GetBoard();//
+        Tt.text = "Place " + GameHeader.CurrentToken + " on the borad";
 
     }
 
